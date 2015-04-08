@@ -822,6 +822,12 @@ class CRM_Core_Permission {
       'edit message templates' => array(
         $prefix . ts('edit message templates'),
       ),
+      'download all invoices' => array(
+        $prefix . ts('download all invoices'),
+      ),
+      'download my invoices' => array(
+        $prefix . ts('download my invoices'),
+      ),
     );
 
     if (!$descriptions) {
@@ -944,4 +950,20 @@ class CRM_Core_Permission {
     ) ? TRUE : FALSE;
   }
 
+  /**
+   * Verify if the user has permission to get the invoice.
+   *
+   * @return bool
+   *  TRUE if the user has download all invoices permission or download my
+   *  invoices permission and the invoice contact is the current user.
+   */
+  public static function checkDownloadInvoice() {
+    $contactID = CRM_Core_Session::getLoggedInContactID();
+    if (CRM_Core_Permission::check('download all invoices') ||
+      (CRM_Core_Permission::check('download my invoices') && $_GET['cid'] == $contactID)) {
+      return TRUE;
+    }
+    return FALSE;
+  }
+  
 }
